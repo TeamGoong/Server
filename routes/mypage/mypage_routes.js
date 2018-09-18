@@ -5,9 +5,8 @@ const express = require('express');
 const router = express.Router();
 
 
-router.use('/qna', require('./qna'));
-router.use('/account_setting', require('./account_setting'));
-router.use('/feedback', require('./feedback'));
-
+// router.use('/qna', require('./qna'));
+// router.use('/account_setting', require('./account_setting'));
+// router.use('/feedback', require('./feedback'));
 
 module.exports = router;
