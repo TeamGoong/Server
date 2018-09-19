@@ -46,7 +46,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/',routes);
+function ignoreFavicon(req, res, next) {
+    if (req.originalUrl === '/favicon.ico') {
+      res.status(204).json({nope: true});
+    } else {
+      next();
+    }
+  }
 
+app.use(ignoreFavicon);
 
 // error handler
 require('./ErrorHandler')(app);
@@ -73,4 +81,3 @@ app.use(function(err, req, res, next)
 });
 
 module.exports = app;
-
