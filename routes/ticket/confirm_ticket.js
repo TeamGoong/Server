@@ -21,6 +21,7 @@ router.get('/', async (req, res, next) => {
         return next("10403")
     }
     let user_id = chkToken.user_id;
+    let result,real_result;
     let getTicketInfoQuery =
         `
         SELECT palace.palace_name, ticket.ticket_people, ticket.ticket_special, ticket.ticket_start,
@@ -30,17 +31,21 @@ router.get('/', async (req, res, next) => {
         `;
     try {
         let getTicketInfoResult = await db.Query(getTicketInfoQuery, [user_id]);
-        result = getTicketInfoResult[0];
-        result.palace_name = getTicketInfoResult[0].palace_name;
-        result.ticket_people = getTicketInfoResult[0].ticket_people;
-        result.ticket_special = getTicketInfoResult[0].ticket_special;
-        result.ticket_start = getTicketInfoResult[0].ticket_start;
-        result.ticket_end = getTicketInfoResult[0].ticket_end;
-        result.ticket_review = getTicketInfoResult[0].ticket_review;
+        for(let i=0; i<getTicketInfoResult.length; i++){
+          result = getTicketInfoResult[i];
+          result.palace_name = getTicketInfoResult[i].palace_name;
+          result.ticket_people = getTicketInfoResult[i].ticket_people;
+          result.ticket_special = getTicketInfoResult[i].ticket_special;
+          result.ticket_start = getTicketInfoResult[i].ticket_start;
+          result.ticket_end = getTicketInfoResult[i].ticket_end;
+          result.ticket_review = getTicketInfoResult[i].ticket_review;
+          real_result.push(result);
+        }
+
     } catch (error) {
         return next(error);
     }
-    return res.r(result);
+    return res.r(real_result);
 });
 
 
