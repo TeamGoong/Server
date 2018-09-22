@@ -6,6 +6,7 @@ const async = require('async');
 const bodyParser = require('body-parser');
 const moment = require('moment');
 const db = require('../../module/pool.js');
+const jwt = require('../../module/jwt.js');
 
 
 /*
@@ -55,3 +56,6 @@ router.post('/', async (req, res, next) => {
 
 module.exports = router;
   
+
+
+module.exports = router;    
