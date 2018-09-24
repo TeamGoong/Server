@@ -24,7 +24,7 @@ router.get('/', async (req, res, next) => {
     let tmp_result,result;
     let getTicketInfoQuery =
         `
-        SELECT palace.palace_name, ticket.ticket_people, ticket.ticket_special, ticket.ticket_start,
+        SELECT palace.palace_name, ticket.ticket_people, ticket.ticket_title, ticket.ticket_flag, ticket.ticket_start,
                ticket.ticket_end, ticket.ticket_review
         FROM palace, ticket
         WHERE ticket.user_id = ? and palace.palace_id = ticket.palace_id
@@ -35,7 +35,8 @@ router.get('/', async (req, res, next) => {
           tmp_result = getTicketInfoResult[i];
           tmp_result.palace_name = getTicketInfoResult[i].palace_name;
           tmp_result.ticket_people = getTicketInfoResult[i].ticket_people;
-          tmp_result.ticket_special = getTicketInfoResult[i].ticket_special;
+          tmp_result.ticket_title = getTicketInfoResult[i].ticket_title;
+          tmp_result.ticket_flag = getTicketInfoResult[i].ticket_flag;
           tmp_result.ticketStart = getTicketInfoResult[i].ticket_start;
           tmp_result.ticketEnd = getTicketInfoResult[i].ticket_end;
           tmp_result.ticket_review = getTicketInfoResult[i].ticket_review;
