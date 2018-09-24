@@ -21,7 +21,11 @@ router.get('/', async (req, res, next) => {
         return next("10403")
     }
     let user_id = chkToken.user_id;
-    let tmp_result,result;
+    let tmp_result,result,end_flag;
+    let today = new Date();
+    // 오늘 날짜를 YYYYMMDD형식으로 변환
+    today = today.toISOString().slice(0,10).replace(/-/g,"");
+
     let getTicketInfoQuery =
         `
         SELECT palace.palace_name, ticket.ticket_people, ticket.ticket_title, ticket.ticket_flag, ticket.ticket_start,
@@ -31,6 +35,8 @@ router.get('/', async (req, res, next) => {
         `;
     try {
         let getTicketInfoResult = await db.Query(getTicketInfoQuery, [user_id]);
+
+
         for(let i=0; i<getTicketInfoResult.length; i++){
           tmp_result = getTicketInfoResult[i];
           tmp_result.palace_name = getTicketInfoResult[i].palace_name;
@@ -40,6 +46,12 @@ router.get('/', async (req, res, next) => {
           tmp_result.ticketStart = getTicketInfoResult[i].ticket_start;
           tmp_result.ticketEnd = getTicketInfoResult[i].ticket_end;
           tmp_result.ticket_review = getTicketInfoResult[i].ticket_review;
+
+          getTicketInfoResult[i].ticket_end = getTicketInfoResult[i].ticket_end.toISOString().slice(0,10).replace(/-/g,"");
+          if(today < getTicketInfoResult[i].ticket_end) end_flag = 0;
+          else end_flag = 1;
+          
+          tmp_result.end_flag = end_flag;
           result.push(tmp_result);
         }
 
