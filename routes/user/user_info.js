@@ -71,8 +71,8 @@ router.post('/', async(req, res, next) => {
 
     let insertQuery =
     `
-    INSERT INTO user (user_age, user_img, user_email)
-    VALUES (?, ?, ?);
+    INSERT INTO user (user_id, user_age, user_img, user_email)
+    VALUES (?, ?, ?, ?);
     `;
 
     if(chkToken != undefined){ // 토큰이 이미 있는 경우 (로그인 되어있는 경우)
@@ -98,8 +98,7 @@ router.post('/', async(req, res, next) => {
         } 
     }
     else { // 토큰이 없는 경우
-        user_email = 3;
-        let checkEmail = await db.Query(checkEmailQuery,[user_email]);
+       let checkEmail = await db.Query(checkEmailQuery,[user_email]);
 
         if(checkEmail.length != 0){ // 기기를 변경했을 경우
             console.log("다른기기에서 접속했습니다");
@@ -112,7 +111,7 @@ router.post('/', async(req, res, next) => {
             });
         } else{ // 다른 기기이고 회원이 아닐때
             console.log("비회원입니다."); 
-            let insertResult = await db.Query(insertQuery,[user_age, user_img ,user_email]); 
+            let insertResult = await db.Query(insertQuery,[user_id, user_age, user_img ,user_email]); 
            
             if(!insertResult){
                 return next("500");
