@@ -16,44 +16,52 @@ const request = require('request-promise');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
 
+router.get('/', async(req, res, next) => {
+    console.log(req.body.accessToken);
+
+})
+
 router.post('/', async(req, res, next) => {
   // 카카오톡 access token
-  let accessToken = req.body.accessToken;
-  if(!accessToken){
-    return next("401");
-  }
 
+  let accessToken = req.body.accessToken;
+  
+    if(!accessToken){
+     return next("401");
+    }
+    
   let option = {
     method : 'GET',
     uri: 'https://kapi.kakao.com/v2/user/me',
     json : true,
     headers : {
-      'Authorization': "Bearer " +  accessToken
+      'authorization': "Bearer " +  accessToken
     }
   }
-
   try {
+      //여기까지가 클라이언트한테 accessToken 받고서 그걸로 카카오 API 요청 하는부분
     let kakaoResult = await request(option);
-
     let result = {};
+    console.log("==================================");
+    console.log(kakaoResult);
+    console.log("==================================");
 
     result.thumbnail_image = kakaoResult.properties.thumbnail_image;
-    result.age_range = kakaoResult.properties.age_range;
-
+    result.age_range = kakaoResult.kakao_account.age_range;
+    
+    var user_id = kakaoResult.id;
     var user_img = kakaoResult.properties.thumbnail_image;
-    var user_age = kakaoResult.properties.age_range;
-    var user_email= kakaoResult.properties.email;
-
+    var user_age = kakaoResult.kakao_account.age_range;
+    var user_email= kakaoResult.kakao_account.email;
     var token;
-
     var chkToken;
 
+    console.log("jwt token here ======================");
+    console.log(jwt.sign(user_email, user_id));
+    console.log("==============================");
     if(req.headers.authorization != undefined){
       chkToken = jwt.verify(req.headers.authorization);
     }
-
-    console.log(chkToken);
-    console.log(jwt.verify(chkToken));
 
     let checkEmailQuery =
     `
@@ -63,15 +71,15 @@ router.post('/', async(req, res, next) => {
 
     let insertQuery =
     `
-    INSERT INTO user (user_age, user_img, user_email)
-    VALUES (?, ?, ?);
+    INSERT INTO user (user_id, user_age, user_img, user_email)
+    VALUES (?, ?, ?, ?);
     `;
 
     if(chkToken != undefined){ // 토큰이 이미 있는 경우 (로그인 되어있는 경우)
       console.log("토큰이 있습니다");
       if(chkToken.email == user_email){
         console.log("성공적으로 로그인 되었습니다");
-        token = jwt.sign(user_email);
+        token = jwt.sign(user_email, user_id);
         res.status(200).send({
             result : {
             message : "success",
@@ -80,7 +88,7 @@ router.post('/', async(req, res, next) => {
         });
       } else { // 토큰이 만료된 경우 재발급
         console.log("기간이 만료되었습니다. 재발급 합니다");
-        token = jwt.sign(user_email);
+        token = jwt.sign(user_email, user_id);
         res.status(200).send({
             "result" : {
             message : "your token ended and reissue new token",
@@ -90,11 +98,11 @@ router.post('/', async(req, res, next) => {
         } 
     }
     else { // 토큰이 없는 경우
-        let checkEmail = await db.queryParamCnt_Arr(checkEmailQuery,[user_email]);
+       let checkEmail = await db.Query(checkEmailQuery,[user_email]);
 
-        if(checkid.length != 0){ // 기기를 변경했을 경우
+        if(checkEmail.length != 0){ // 기기를 변경했을 경우
             console.log("다른기기에서 접속했습니다");
-            token = jwt.sign(user_email);
+            token = jwt.sign(user_email, checkEmail.user_id);
             res.status(200).send({
                 "result" : {
                     message : "new device login",
@@ -102,15 +110,16 @@ router.post('/', async(req, res, next) => {
                 }
             });
         } else{ // 다른 기기이고 회원이 아닐때
-            console.log("비회원입니다.")
-
-            
-            await db.queryParamCnt_Arr(insertQuery, [user_age, user_img, user_,email]);
-            let insertResult = await db.queryParamCnt_Arr(insertQuery,[user_age, user_img ,user_email]); 
-
-            token = jwt.sign(user_email);
+            console.log("비회원입니다."); 
+            let insertResult = await db.Query(insertQuery,[user_id, user_age, user_img ,user_email]); 
+           
+            if(!insertResult){
+                return next("500");
+              }
+      
+            token = jwt.sign(user_email, insertResult.user_id);
             console.log(token);
-            
+            console.log(insertResult);
             res.status(200).send({
                 "result" : {
                     message : "sign up success",
@@ -121,7 +130,7 @@ router.post('/', async(req, res, next) => {
         }
     }
     catch(err) {
-        console.log("kakao Error => " + err);
+         console.log("kakao Error => " + err);
         next(err);
     }
     finally {
