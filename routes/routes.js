@@ -7,5 +7,6 @@ const router = express.Router();
 router.use('/mypage', require('./mypage/mypage_routes'));
 router.use('/user', require('./user/user_routes'));
 router.use('/ticket', require('./ticket/ticket_routes'));
+router.use('/palace', require('./palace/palace_routes.js'));
 
 module.exports = router;
