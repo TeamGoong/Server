@@ -31,7 +31,7 @@ router.get('/', async (req, res, next) => {
 
     let getTicketInfoQuery =
         `
-        SELECT palace.palace_name, ticket.ticket_person, ticket.ticket_title, ticket.ticket_flag, ticket.ticket_start,
+        SELECT ticket.ticket_id, palace.palace_name, ticket.ticket_person, ticket.ticket_title, ticket.ticket_flag, ticket.ticket_start,
                ticket.ticket_end, ticket.ticket_review
         FROM palace, ticket
         WHERE ticket.user_id = ? and palace.palace_id = ticket.palace_id
@@ -42,6 +42,7 @@ router.get('/', async (req, res, next) => {
         for(let i=0; i<getTicketInfoResult.length; i++){
 
           let tmp_result = {};
+          tmp_result.ticket_id = getTicketInfoResult[i].ticket_id;
           tmp_result.palace_name = getTicketInfoResult[i].palace_name;
           tmp_result.ticket_people = getTicketInfoResult[i].ticket_person;
           tmp_result.ticket_title = getTicketInfoResult[i].ticket_title;
