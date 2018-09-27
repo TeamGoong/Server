@@ -26,7 +26,6 @@ router.get('/', async (req, res, next) => {
     let end_flag = 0;
     let today = new Date();
 
-    console.log(chkToken);
     // 오늘 날짜를 YYYYMMDD형식으로 변환
     today = today.toISOString().slice(0,10).replace(/-/g,"");
 
@@ -47,11 +46,11 @@ router.get('/', async (req, res, next) => {
           tmp_result.ticket_people = getTicketInfoResult[i].ticket_person;
           tmp_result.ticket_title = getTicketInfoResult[i].ticket_title;
           tmp_result.ticket_flag = getTicketInfoResult[i].ticket_flag;
-          tmp_result.ticketStart = getTicketInfoResult[i].ticket_start.toISOString().split('T')[0];
-          tmp_result.ticketEnd = getTicketInfoResult[i].ticket_end.toISOString().split('T')[0];
+          tmp_result.ticket_start = getTicketInfoResult[i].ticket_start.toISOString().slice(0,10).replace(/-/g,"");
+          tmp_result.ticket_end = getTicketInfoResult[i].ticket_end.toISOString().slice(0,10).replace(/-/g,"");
           tmp_result.ticket_review = getTicketInfoResult[i].ticket_review;
 
-          if(today < getTicketInfoResult[i].ticket_end.toISOString().slice(0,10).replace(/-/g,"")) end_flag = 0;
+          if(today < tmp_result.ticket_end) end_flag = 0;
           else end_flag = 1;
 
           tmp_result.end_flag = end_flag;
