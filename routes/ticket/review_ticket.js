@@ -47,14 +47,40 @@ router.get('/:palace_id', async (req, res,next) => {
         WHERE palace_id = ?
         `;
 
-    let result, selectResult ={};
+    let result = {}
+    let selectResult ={};
     try {
         selectResult = await db.Query(selectQuery, [req.params.palace_id]);
-        selectResult[0].total = selectResult[0].total.toPrecision(2);
+        
+        result.total = selectResult[0].total.toPrecision(2);
+
+        if(selectResult[0].traffic.toPrecision(2) < 5){
+            result.traffic = 0;    
+        } else if(selectResult[0].traffic.toPrecision(2) < 10){
+            result.traffic = 5;    
+        } else if(selectResult[0].traffic.toPrecision(2) >= 10){
+            result.traffic = 10;
+        } 
+
+        if(selectResult[0].crowd.toPrecision(2) < 5){
+            result.crowd = 0;    
+        } else if(selectResult[0].crowd.toPrecision(2) < 10){
+            result.crowd = 5;    
+        } else if(selectResult[0].crowd.toPrecision(2) >= 10){
+            result.crowd = 10;
+        }
+
+        if(selectResult[0].attraction.toPrecision(2) < 5){
+            result.attraction = 0;    
+        } else if(selectResult[0].attraction.toPrecision(2) < 10){
+            result.attraction = 5;    
+        } else if(selectResult[0].attraction.toPrecision(2) >= 10){
+            result.attraction = 10;
+        }
     } catch (error) {
         return next(error)
     }
-    return res.r(selectResult);
+    return res.r(result);
 });
 
 
