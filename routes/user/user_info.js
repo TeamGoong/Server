@@ -52,7 +52,9 @@ router.post('/', async(req, res, next) => {
     var user_id = kakaoResult.id;
     var user_img = kakaoResult.properties.thumbnail_image;
     var user_age = kakaoResult.kakao_account.age_range;
-    var user_email= kakaoResult.kakao_account.email;
+    var user_email = kakaoResult.kakao_account.email;
+    user_email = 77;
+    user_age = 33;
     var token;
     var chkToken;
 
@@ -102,6 +104,8 @@ router.post('/', async(req, res, next) => {
 
         if(checkEmail.length != 0){ // 기기를 변경했을 경우
             console.log("다른기기에서 접속했습니다");
+            
+            console.log(insertResult.user_id);
             token = jwt.sign(user_email, checkEmail.user_id);
             res.status(200).send({
                 "result" : {
@@ -110,13 +114,13 @@ router.post('/', async(req, res, next) => {
                 }
             });
         } else{ // 다른 기기이고 회원이 아닐때
-            console.log("비회원입니다."); 
+            console.log("비회원입니다.");
             let insertResult = await db.Query(insertQuery,[user_id, user_age, user_img ,user_email]); 
            
             if(!insertResult){
                 return next("500");
               }
-      
+            console.log(insertResult.user_id);
             token = jwt.sign(user_email, insertResult.user_id);
             console.log(token);
             console.log(insertResult);
