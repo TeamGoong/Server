@@ -21,16 +21,17 @@ router.get('/', async (req, res, next) => {
         return next("10403")
     }
     let user_id = chkToken.user_id;
-    let tmp_result = {};
-    let result = {};
+
+    let result = [];
     let end_flag = 0;
     let today = new Date();
+
     // 오늘 날짜를 YYYYMMDD형식으로 변환
     today = today.toISOString().slice(0,10).replace(/-/g,"");
 
     let getTicketInfoQuery =
         `
-        SELECT palace.palace_name, ticket.ticket_person, ticket.ticket_title, ticket.ticket_flag, ticket.ticket_start,
+        SELECT ticket.ticket_id, palace.palace_name, ticket.ticket_person, ticket.ticket_title, ticket.ticket_flag, ticket.ticket_start,
                ticket.ticket_end, ticket.ticket_review
         FROM palace, ticket
         WHERE ticket.user_id = ? and palace.palace_id = ticket.palace_id
@@ -39,17 +40,18 @@ router.get('/', async (req, res, next) => {
         let getTicketInfoResult = await db.Query(getTicketInfoQuery, [user_id]);
 
         for(let i=0; i<getTicketInfoResult.length; i++){
-          tmp_result = getTicketInfoResult[i];
+
+          let tmp_result = {};
+          tmp_result.ticket_id = getTicketInfoResult[i].ticket_id;
           tmp_result.palace_name = getTicketInfoResult[i].palace_name;
-          tmp_result.ticket_people = getTicketInfoResult[i].ticket_people;
+          tmp_result.ticket_people = getTicketInfoResult[i].ticket_person;
           tmp_result.ticket_title = getTicketInfoResult[i].ticket_title;
           tmp_result.ticket_flag = getTicketInfoResult[i].ticket_flag;
-          tmp_result.ticketStart = getTicketInfoResult[i].ticket_start;
-          tmp_result.ticketEnd = getTicketInfoResult[i].ticket_end;
+          tmp_result.ticket_start = getTicketInfoResult[i].ticket_start.toISOString().slice(0,10).replace(/-/g,"");
+          tmp_result.ticket_end = getTicketInfoResult[i].ticket_end.toISOString().slice(0,10).replace(/-/g,"");
           tmp_result.ticket_review = getTicketInfoResult[i].ticket_review;
 
-          getTicketInfoResult[i].ticket_end = getTicketInfoResult[i].ticket_end.toISOString().slice(0,10).replace(/-/g,"");
-          if(today < getTicketInfoResult[i].ticket_end) end_flag = 0;
+          if(today < tmp_result.ticket_end) end_flag = 0;
           else end_flag = 1;
 
           tmp_result.end_flag = end_flag;
@@ -59,8 +61,7 @@ router.get('/', async (req, res, next) => {
     } catch (error) {
         return next(error);
     }
-    console.log(tmp_result)
-    console.log(result)
+
     return res.r(result);
 });
 
