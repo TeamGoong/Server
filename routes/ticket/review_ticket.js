@@ -35,7 +35,7 @@ router.post('/', async (req, res, next) => {
     return res.r(result);
 });
 
-//후기작성
+//후기조회
 //GET
 router.get('/:palace_id', async (req, res,next) => {
     console.log(req.params.palace_id);
@@ -52,14 +52,14 @@ router.get('/:palace_id', async (req, res,next) => {
     try {
         selectResult = await db.Query(selectQuery, [req.params.palace_id]);
         
-        result.total = selectResult[0].total.toPrecision(2);
+        result.total = selectResult[0].total;
 
         if(selectResult[0].traffic.toPrecision(2) < 5){
             result.traffic = 0;    
         } else if(selectResult[0].traffic.toPrecision(2) < 10){
             result.traffic = 5;    
         } else if(selectResult[0].traffic.toPrecision(2) >= 10){
-            result.traffic = 10;
+            result.traffic = 10;    
         } 
 
         if(selectResult[0].crowd.toPrecision(2) < 5){
