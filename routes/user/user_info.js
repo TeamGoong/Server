@@ -117,7 +117,7 @@ router.post('/', async(req, res, next) => {
             if(!insertResult){
                 return next("500");
               }
-            token = jwt.sign(user_email, insertResult.user_id);
+            token = jwt.sign(user_email, insertResult[0].user_id);
 
             res.status(200).send({
                 "result" : {
