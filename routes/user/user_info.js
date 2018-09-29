@@ -80,10 +80,11 @@ router.post('/', async(req, res, next) => {
       if(chkToken.email == user_email){
         console.log("성공적으로 로그인 되었습니다");
         token = jwt.sign(user_email, user_id);
+        console.log(token);
         res.status(200).send({
             result : {
             message : "success",
-            token : req.headers.authorization
+            token : token
             }
         });
       } else { // 토큰이 만료된 경우 재발급
@@ -102,7 +103,7 @@ router.post('/', async(req, res, next) => {
 
         if(checkEmail.length != 0){ // 기기를 변경했을 경우
             console.log("다른기기에서 접속했습니다");
-            token = jwt.sign(user_email, checkEmail.user_id);
+            token = jwt.sign(user_email, checkEmail[0].user_id);
             res.status(200).send({
                 "result" : {
                     message : "new device login",
@@ -116,11 +117,8 @@ router.post('/', async(req, res, next) => {
             if(!insertResult){
                 return next("500");
               }
-
-            console.log(insertResult.user_id);
             token = jwt.sign(user_email, insertResult.user_id);
-            console.log(token);
-            console.log(insertResult);
+
             res.status(200).send({
                 "result" : {
                     message : "sign up success",
