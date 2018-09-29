@@ -15,7 +15,8 @@ router.post('/', async (req, res, next) => {
     let { palace_id, review_traffic, review_crowd, review_attraction, ticket_id } = req.body;
     let {user_id} = req.header;
     let result;
-    let review_total = (parseInt(review_traffic) + parseInt(review_crowd) + parseInt(review_attraction))/3;
+    let review_total = ((parseInt(review_traffic) + parseInt(review_crowd) + parseInt(review_attraction))/3).toPrecision(2);
+    
     let Query = 
         ` 
         INSERT INTO review(palace_id, review_total, review_traffic, review_crowd, review_attraction, ticket_id)
@@ -27,7 +28,7 @@ router.post('/', async (req, res, next) => {
                UPDATE goongs.ticket SET ticket_review = '1'
                WHERE (ticket_id = ?);
              `
-
+        
         await db.Query(ticketQuery, [ticket_id]);
         } catch (error) {
         return next(error);
