@@ -53,8 +53,6 @@ router.post('/', async(req, res, next) => {
     var user_img = kakaoResult.properties.thumbnail_image;
     var user_age = kakaoResult.kakao_account.age_range;
     var user_email = kakaoResult.kakao_account.email;
-    user_email = 77;
-    user_age = 33;
     var token;
     var chkToken;
 
@@ -105,7 +103,6 @@ router.post('/', async(req, res, next) => {
         if(checkEmail.length != 0){ // 기기를 변경했을 경우
             console.log("다른기기에서 접속했습니다");
             
-            console.log(insertResult.user_id);
             token = jwt.sign(user_email, checkEmail.user_id);
             res.status(200).send({
                 "result" : {
@@ -120,6 +117,7 @@ router.post('/', async(req, res, next) => {
             if(!insertResult){
                 return next("500");
               }
+
             console.log(insertResult.user_id);
             token = jwt.sign(user_email, insertResult.user_id);
             console.log(token);
