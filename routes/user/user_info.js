@@ -25,11 +25,11 @@ router.post('/', async(req, res, next) => {
   // 카카오톡 access token
 
   let accessToken = req.body.accessToken;
-  
+
     if(!accessToken){
      return next("401");
     }
-    
+
   let option = {
     method : 'GET',
     uri: 'https://kapi.kakao.com/v2/user/me',
@@ -48,7 +48,7 @@ router.post('/', async(req, res, next) => {
 
     result.thumbnail_image = kakaoResult.properties.thumbnail_image;
     result.age_range = kakaoResult.kakao_account.age_range;
-    
+
     var user_id = kakaoResult.id;
     var user_img = kakaoResult.properties.thumbnail_image;
     var user_age = kakaoResult.kakao_account.age_range;
@@ -84,7 +84,7 @@ router.post('/', async(req, res, next) => {
             result : {
             message : "success",
             token : req.headers.authorization
-            }   
+            }
         });
       } else { // 토큰이 만료된 경우 재발급
         console.log("기간이 만료되었습니다. 재발급 합니다");
@@ -95,14 +95,13 @@ router.post('/', async(req, res, next) => {
             token : token
             }
           });
-        } 
+        }
     }
     else { // 토큰이 없는 경우
        let checkEmail = await db.Query(checkEmailQuery,[user_email]);
 
         if(checkEmail.length != 0){ // 기기를 변경했을 경우
             console.log("다른기기에서 접속했습니다");
-            
             token = jwt.sign(user_email, checkEmail.user_id);
             res.status(200).send({
                 "result" : {
@@ -112,8 +111,8 @@ router.post('/', async(req, res, next) => {
             });
         } else{ // 다른 기기이고 회원이 아닐때
             console.log("비회원입니다.");
-            let insertResult = await db.Query(insertQuery,[user_id, user_age, user_img ,user_email]); 
-           
+            let insertResult = await db.Query(insertQuery,[user_id, user_age, user_img ,user_email]);
+
             if(!insertResult){
                 return next("500");
               }
