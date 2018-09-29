@@ -104,10 +104,7 @@ router.post('/', async(req, res, next) => {
         if(checkEmail.length != 0){ // 기기를 변경했을 경우
             console.log("다른기기에서 접속했습니다");
 
-            // console.log(insertResult.user_id);
             token = jwt.sign(user_email, checkEmail[0].user_id);
-
-
 
             res.status(200).send({
                 "result" : {
@@ -122,7 +119,7 @@ router.post('/', async(req, res, next) => {
             if(!insertResult){
                 return next("500");
               }
-            token = jwt.sign(user_email, insertResult.user_id);
+            token = jwt.sign(user_email, insertResult[0].user_id);
 
             res.status(200).send({
                 "result" : {
