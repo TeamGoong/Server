@@ -10,4 +10,4 @@
 ![kakaotalk_photo_2018-09-30-17-33-32](https://user-images.githubusercontent.com/23414861/46255356-083c9180-c4d7-11e8-8615-c2576c8c5a31.jpeg)
 
 # 개발자
-권재림 김민경 권서연
+- 권재림 김민경 권서연
