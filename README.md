@@ -10,6 +10,10 @@
 
 ## [ System Architecture & explanation ]
 ![architecture](https://github.com/TeamGoong/Server/blob/master/public_data/architecture.png)
+1. AWS EC2를 사용하여 서버 배포
+2. [PM2](https://github.com/Unitech/pm2) 를 사용하여 NodeJS process 관리 및 application  실행
+3. AWS S3 스토리지에 Images 저장
+4. AWS RDS MYSQL 사용 - Static Data 저장 
 
 # [ 개발자 ]
 - 권재림 
