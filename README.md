@@ -23,7 +23,7 @@
 
 * [async/await](https://github.com/Anwesh43/aync-await-js)
 
-# [ 개발자 ]
+## [ 개발자 ]
 - [권재림](https://github.com/jaeleum)
 - [김민경](https://github.com/minkyoe)
 - [권서연](https://github.com/seoyeonKKK)
