@@ -1,7 +1,7 @@
 # [ 2018년 서울시 앱 공모전 출품작, 이궁저궁 - Server]
 서울시 내의 4대궁(경복궁, 창덕궁, 창경궁, 덕수궁) 및 종묘의 특별한 행사 정보 제공, 궁 입장권 예매 서비스입니다.
 
-##[ Logo ]
+## [ Logo ]
 ![playstore_icon](https://user-images.githubusercontent.com/23414861/46255272-0920f380-c4d6-11e8-9147-2c9d7522c376.png)
 
 ## [ Workflow ]
