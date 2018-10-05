@@ -7,7 +7,7 @@ const secretKey = require('../config/secretKey').key;
 
 module.exports = {
     // Issue jwt Token
-    sign : function(email, user_idx) {
+    sign : function(email, user_id) {
         const options = {
             algorithm : "HS256",
             expiresIn : 60 * 60 * 24 * 30 //30 days
@@ -15,7 +15,7 @@ module.exports = {
         //token에 넣을 값
         const payload = {
             "email" : email,
-            "user_idx" : user_idx
+            "user_id" : user_id
         };
         
         let token = jwt.sign(payload, secretKey, options);
