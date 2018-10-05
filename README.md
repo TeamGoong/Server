@@ -15,7 +15,15 @@
 3. AWS S3 스토리지에 Images 저장
 4. AWS RDS MYSQL 사용 - Static Data 저장 
 
+## [ 사용 모듈 ]
+
+* [multer](https://github.com/expressjs/multer)
+
+* [jwt](https://github.com/lcobucci/jwt)
+
+* [async/await](https://github.com/Anwesh43/aync-await-js)
+
 # [ 개발자 ]
-- 권재림 
-- 김민경 
-- 권서연
+- [권재림](https://github.com/jaeleum)
+- [김민경](https://github.com/minkyoe)
+- [권서연](https://github.com/seoyeonKKK)
